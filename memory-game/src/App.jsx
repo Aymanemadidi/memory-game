@@ -1,45 +1,24 @@
-import { useState } from 'react'
-import logo from './logo.svg'
-import './App.css'
+import React from "react";
+
+import "./App.css";
 
 function App() {
-  const [count, setCount] = useState(0)
+  let boxArr = Array(6).fill(Math.random);
 
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>Hello Vite + React!</p>
-        <p>
-          <button type="button" onClick={() => setCount((count) => count + 1)}>
-            count is: {count}
-          </button>
-        </p>
-        <p>
-          Edit <code>App.jsx</code> and save to test HMR updates.
-        </p>
-        <p>
-          <a
-            className="App-link"
-            href="https://reactjs.org"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Learn React
-          </a>
-          {' | '}
-          <a
-            className="App-link"
-            href="https://vitejs.dev/guide/features.html"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Vite Docs
-          </a>
-        </p>
-      </header>
+    <div className="App text-center">
+      <h1 className="text-indigo-600 text-2xl font-semibold">Hello from App</h1>
+      <div className="grid gap-3 grid-flow-col mt-10">
+        {boxArr.map((b, i) => {
+          return (
+            <button className="p-5 bg-slate-900 rounded-md" key={b + i}>
+              a
+            </button>
+          );
+        })}
+      </div>
     </div>
-  )
+  );
 }
 
-export default App
+export default App;
