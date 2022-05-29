@@ -7,6 +7,9 @@
       "jsx": true
     }
   },
+  "rules": {
+    "no-unused-vars": ["warn", { "vars": "all", "args": "after-used", "ignoreRestSiblings": false }]
+  },
   "env": {
     "es6": true,
     "browser": true,
