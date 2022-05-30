@@ -35,8 +35,22 @@ function App() {
       }
     }
     setToCompare(arr);
-    console.log(arr);
+    // console.log(arr);
   }, []);
+
+  useEffect(() => {
+    // console.log("test");
+    console.log("SELECTED", selectedBoxes);
+    console.log("TOCOMPARE", toComapre);
+    if (selectedBoxes.length === 3) {
+      for (let i = 0; i < toComapre.length; i++) {
+        if (!toComapre.includes(selectedBoxes[i])) {
+          console.log(false);
+        }
+      }
+      alert("you won");
+    }
+  }, [selectedBoxes, toComapre]);
 
   useEffect(() => {
     let i = 0;
