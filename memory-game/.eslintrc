@@ -9,6 +9,7 @@
   },
   "rules": {
     "no-unused-vars": ["warn", { "vars": "all", "args": "after-used", "ignoreRestSiblings": false }]
+    // "exhaustive-deps": ["warn"]
   },
   "env": {
     "es6": true,
