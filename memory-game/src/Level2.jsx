@@ -1,5 +1,5 @@
 import React from "react";
-import { useState, useEffect, useRef, useLayoutEffect } from "react";
+import { useState, useEffect } from "react";
 
 import "./App.css";
 
@@ -9,7 +9,7 @@ function getRandomInt(max) {
 
 function App() {
   const [boxArr, setBoxArr] = useState(
-    Array.from({ length: 15 }, (_, i) => i + 1) // 9 -12 -15 - 18
+    Array.from({ length: 9 }, (_, i) => i + 1) // 9 -12 -15 - 18
   );
   const [selectedBoxes, setSelectedBoxes] = useState([]);
   const [flashedItems, setFlashedItems] = useState([]);
@@ -29,8 +29,8 @@ function App() {
 
   const arr = [];
   useEffect(() => {
-    if (arr.length < 7) {
-      for (let i = 0; i < 7; i++) {
+    if (arr.length < 3) {
+      for (let i = 0; i < 3; i++) {
         let toPush = getRandomInt(boxArr.length);
         while (arr.includes(toPush)) {
           toPush = getRandomInt(boxArr.length);
@@ -39,33 +39,27 @@ function App() {
       }
     }
     setToCompare(arr);
+    // console.log(arr);
   }, []);
 
   useEffect(() => {
+    // console.log("test");
     console.log("SELECTED", selectedBoxes);
     console.log("TOCOMPARE", toComapre);
-    if (selectedBoxes.length > 0) {
-      console.log("check");
-      for (let i = 0; i < selectedBoxes.length; i++) {
-        if (toComapre[i] !== selectedBoxes[i]) {
+    if (selectedBoxes.length === 3) {
+      for (let i = 0; i < toComapre.length; i++) {
+        if (!toComapre.includes(selectedBoxes[i])) {
           console.log(false);
-          alert("NOPE");
-          window.location.reload();
-          return;
         }
       }
-    }
-    if (selectedBoxes.length === 8) {
       alert("you won");
-      window.location.reload();
-      return;
     }
   }, [selectedBoxes, toComapre]);
 
   useEffect(() => {
     let i = 0;
     const flashInt = setInterval(() => {
-      if (i == 8) {
+      if (i == 4) {
         setFlashedItems([]);
         clearInterval(flashInt);
         return;
@@ -81,18 +75,14 @@ function App() {
 
   return (
     <div className="App text-center">
-      <h1 className="text-indigo-600 text-2xl font-semibold mt-4">
-        Memory Game
-      </h1>
-      <div className={`grid gap-5 mt-10 mx-10 grid-cols-4`}>
+      <h1 className="text-indigo-600 text-2xl font-semibold">Hello from App</h1>
+      <div className={`grid gap-5 mt-10 mx-10 grid-cols-${boxArr.length / 3}`}>
         {boxArr.map((b, i) => {
           return (
             <button
-              className={`px-5 py-12 bg-slate-300 rounded-md text-slate-300 
-              ${
-                selectedBoxes.includes(i) ? "bg-slate-700 text-slate-700" : ""
-              }${
-                flashedItems.includes(i) ? "bg-indigo-500 text-indigo-500" : ""
+              className={`px-5 py-12 bg-slate-300 rounded-md text-slate-900 
+              ${selectedBoxes.includes(i) ? "bg-slate-700" : ""}${
+                flashedItems.includes(i) ? "bg-indigo-500" : ""
               }`}
               key={b + i}
               onClick={() => handleSelectBtn(i)}
