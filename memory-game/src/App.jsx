@@ -14,8 +14,9 @@ function App() {
   const [selectedBoxes, setSelectedBoxes] = useState([]);
   const [flashedItems, setFlashedItems] = useState([]);
   const [toComapre, setToCompare] = useState([]);
-  // const [timer, setTimer] = useState(10);
+  const [nope, setNope] = useState(false);
   const [started, setStarted] = useState(false);
+  const [enabled, setEnabled] = useState(true);
   // const [firstRender, setFirstRender] = useState(true);
 
   function handleSelectBtn(i) {
@@ -42,6 +43,7 @@ function App() {
       }
     }
     setToCompare(arr);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   function fillArr() {
@@ -78,17 +80,30 @@ function App() {
   }, [selectedBoxes, toComapre]);
 
   useEffect(() => {
+    if (nope) {
+      alert("Nope");
+    }
+  }, [nope]);
+
+  useEffect(() => {
     let i = 0;
+    let j = 0;
     const flashInt = setInterval(() => {
       if (i === 8) {
-        console.log("finished");
+        // console.log("finished");
         setFlashedItems([]);
-        clearInterval(flashInt);
-        // const timeout =
-        setTimeout(() => {
-          console.log("hey");
-          fillArr();
-        }, 10000);
+        const timeout = setTimeout(() => {
+          if (j === 9) {
+            clearInterval(flashInt);
+            setNope(true);
+            fillArr();
+            setEnabled(true);
+            console.log("cleared");
+            clearInterval(timeout);
+          }
+          j++;
+          console.log(j);
+        }, 1000);
         // clearTimeout(timeout);
         return;
       }
@@ -96,9 +111,12 @@ function App() {
       setFlashedItems([toComapre[i]]);
       i++;
     }, 1000);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [started]);
 
   function startGame() {
+    if (enabled) setEnabled(false);
+    if (nope) setNope(false);
     setSelectedBoxes([]);
     console.log("SYNC", toComapre);
     setStarted(!started);
@@ -131,11 +149,11 @@ function App() {
         <button
           className="bg-indigo-500 text-white p-3 rounded-md hover:bg-indigo-400 disabled:bg-indigo-300"
           onClick={() => startGame()}
-          //disabled={started}
+          disabled={!enabled}
         >
           Start Game
         </button>
-        {/* <p>{`time left ${timer} seconds`}</p> */}
+        <p>{`time left 10 seconds`}</p>
       </div>
     </div>
   );
