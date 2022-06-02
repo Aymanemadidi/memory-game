@@ -1,5 +1,5 @@
 import React from "react";
-import { useState, useEffect, useRef, useLayoutEffect } from "react";
+import { useState, useEffect } from "react";
 
 import "./App.css";
 
@@ -8,15 +8,13 @@ function getRandomInt(max) {
 }
 
 function App() {
-  const [boxArr, setBoxArr] = useState(
+  const [boxArr] = useState(
     Array.from({ length: 16 }, (_, i) => i + 1) // 9 -12 -15 - 18
   );
   const [selectedBoxes, setSelectedBoxes] = useState([]);
   const [flashedItems, setFlashedItems] = useState([]);
   const [toComapre, setToCompare] = useState([]);
-  const [trys, setTrys] = useState(3);
-  const [started, setStarted] = useState(false);
-  const [firstRender, setFirstRender] = useState(false);
+  const [timer, setTimer] = useState(10);
 
   function handleSelectBtn(i) {
     if (selectedBoxes.includes(i)) {
@@ -32,7 +30,6 @@ function App() {
 
   const arr = [];
   useEffect(() => {
-    setFirstRender(true);
     if (arr.length < 7) {
       for (let i = 0; i < 7; i++) {
         let toPush = getRandomInt(boxArr.length);
@@ -56,7 +53,6 @@ function App() {
       }
     }
     setToCompare(arr);
-    //setFlashedItems(arr);
   }
 
   useEffect(() => {
@@ -80,38 +76,31 @@ function App() {
   }, [selectedBoxes, toComapre]);
 
   function startGame() {
-    // if (trys === 3 && !firstRender) {
-    //   setSelectedBoxes([]);
-    //   setToCompare([]);
-    //   fillArr();
-    // }
-    // //fillArr();
-    // if (trys === 1) {
-    //   setFirstRender(false);
-    //   setSelectedBoxes([]);
-    //   setTrys(3);
-    // } else {
-    //   setSelectedBoxes([]);
-    //   setTrys(trys - 1);
-    // }
-    if (!firstRender) {
-      fillArr();
-    }
-    setStarted(true);
     setSelectedBoxes([]);
-    let i = 0;
     console.log("SYNC", toComapre);
+    let i = 0;
+    let j = 0;
     const flashInt = setInterval(() => {
       if (i == 8) {
+        console.log("finished");
         setFlashedItems([]);
         clearInterval(flashInt);
+        const int = setInterval(() => {
+          if (j === 10) {
+            clearInterval(int);
+            return;
+          }
+          setTimer(timer - 1);
+          console.log("test");
+          j++;
+        }, 1000);
+        fillArr();
         return;
       }
       //console.log(toComapre);
       setFlashedItems([toComapre[i]]);
       i++;
     }, 1000);
-    setFirstRender(false);
   }
 
   return (
@@ -123,7 +112,7 @@ function App() {
         {boxArr.map((b, i) => {
           return (
             <button
-              className={`px-5 py-12 bg-slate-300 rounded-md text-slate-300 
+              className={`px-5 py-12 bg-slate-300 rounded-md text-slate-900 
               ${
                 selectedBoxes.includes(i) ? "bg-slate-700 text-slate-700" : ""
               }${
@@ -132,7 +121,7 @@ function App() {
               key={b + i}
               onClick={() => handleSelectBtn(i)}
             >
-              a
+              {b - 1}
             </button>
           );
         })}
@@ -145,14 +134,7 @@ function App() {
         >
           Start Game
         </button>
-        {/* <button
-          className={`bg-indigo-500 text-white p-3 rounded-md hover:bg-indigo-400 ml-2 ${
-            started ? "" : "hidden"
-          }`}
-          onClick={() => startGame()}
-        >
-          New Pattern
-        </button> */}
+        <p>{`time left ${timer} seconds`}</p>
       </div>
     </div>
   );

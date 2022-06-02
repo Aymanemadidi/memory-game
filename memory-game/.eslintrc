@@ -1,5 +1,15 @@
 {
-  "extends": ["eslint:recommended", "plugin:react/recommended"],
+  "extends": [
+    "eslint:recommended",
+    "plugin:react/recommended",
+    "plugin:react-hooks/recommended",
+    "prettier"
+  ],
+  "rules": {
+    "react/prop-types": 0,
+    "react/react-in-jsx-scope": 0
+  },
+  "plugins": ["react"],
   "parserOptions": {
     "ecmaVersion": 2022,
     "sourceType": "module",
@@ -7,13 +17,14 @@
       "jsx": true
     }
   },
-  "rules": {
-    "no-unused-vars": ["warn", { "vars": "all", "args": "after-used", "ignoreRestSiblings": false }]
-    // "exhaustive-deps": ["warn"]
-  },
   "env": {
     "es6": true,
     "browser": true,
     "node": true
+  },
+  "settings": {
+    "react": {
+      "version": "detect"
+    }
   }
 }
