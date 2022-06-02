@@ -14,7 +14,9 @@ function App() {
   const [selectedBoxes, setSelectedBoxes] = useState([]);
   const [flashedItems, setFlashedItems] = useState([]);
   const [toComapre, setToCompare] = useState([]);
-  const [timer, setTimer] = useState(10);
+  // const [timer, setTimer] = useState(10);
+  const [started, setStarted] = useState(false);
+  // const [firstRender, setFirstRender] = useState(true);
 
   function handleSelectBtn(i) {
     if (selectedBoxes.includes(i)) {
@@ -75,32 +77,31 @@ function App() {
     }
   }, [selectedBoxes, toComapre]);
 
-  function startGame() {
-    setSelectedBoxes([]);
-    console.log("SYNC", toComapre);
+  useEffect(() => {
     let i = 0;
-    let j = 0;
     const flashInt = setInterval(() => {
-      if (i == 8) {
+      if (i === 8) {
         console.log("finished");
         setFlashedItems([]);
         clearInterval(flashInt);
-        const int = setInterval(() => {
-          if (j === 10) {
-            clearInterval(int);
-            return;
-          }
-          setTimer(timer - 1);
-          console.log("test");
-          j++;
-        }, 1000);
-        fillArr();
+        // const timeout =
+        setTimeout(() => {
+          console.log("hey");
+          fillArr();
+        }, 10000);
+        // clearTimeout(timeout);
         return;
       }
       //console.log(toComapre);
       setFlashedItems([toComapre[i]]);
       i++;
     }, 1000);
+  }, [started]);
+
+  function startGame() {
+    setSelectedBoxes([]);
+    console.log("SYNC", toComapre);
+    setStarted(!started);
   }
 
   return (
@@ -134,7 +135,7 @@ function App() {
         >
           Start Game
         </button>
-        <p>{`time left ${timer} seconds`}</p>
+        {/* <p>{`time left ${timer} seconds`}</p> */}
       </div>
     </div>
   );
