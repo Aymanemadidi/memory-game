@@ -1,5 +1,5 @@
 import React from "react";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useLayoutEffect } from "react";
 
 import "./App.css";
 
@@ -17,6 +17,10 @@ function App() {
   const [nope, setNope] = useState(false);
   const [started, setStarted] = useState(false);
   const [enabled, setEnabled] = useState(true);
+  const [switchFill, setSwitchFill] = useState(true);
+  const [win, setWin] = useState(false);
+  // const [switch, setSwitch] = useState(false);
+  // const [counter, setCounter] = useState(10);
   // const [firstRender, setFirstRender] = useState(true);
 
   function handleSelectBtn(i) {
@@ -27,7 +31,7 @@ function App() {
       setSelectedBoxes([...selectedCopy]);
     } else {
       setSelectedBoxes([...selectedBoxes, i]);
-      console.log(selectedBoxes);
+      // console.log(selectedBoxes);
     }
   }
 
@@ -59,24 +63,36 @@ function App() {
     setToCompare(arr);
   }
 
+  useLayoutEffect(() => {
+    fillArr();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [switchFill]);
+
   useEffect(() => {
     // console.log("SELECTED", selectedBoxes);
     // console.log("TOCOMPARE", toComapre);
     if (selectedBoxes.length > 0) {
       // console.log("check");
       for (let i = 0; i < selectedBoxes.length; i++) {
-        if (toComapre[i] !== selectedBoxes[i]) {
-          console.log(false);
+        if (toComapre[i] !== selectedBoxes[i] && !win) {
+          // console.log(false);
           alert("NOPE");
+          setWin(false);
           setSelectedBoxes([]);
           return;
         }
       }
     }
-    if (selectedBoxes.length === 8) {
+    //console.log("length", selectedBoxes.length);
+    if (selectedBoxes.length === 7) {
       alert("you won");
+      setWin(true);
+      setSelectedBoxes([]);
+      setEnabled(true);
+      setSwitchFill(!switchFill);
       return;
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedBoxes, toComapre]);
 
   useEffect(() => {
@@ -85,38 +101,65 @@ function App() {
     }
   }, [nope]);
 
+  // function checkWin(first, second) {
+  //   if (win) {
+  //     console.log("From func checkWin");
+  //     clearInterval(first);
+  //     clearInterval(second);
+  //   }
+  // }
+
   useEffect(() => {
-    let i = 0;
-    let j = 0;
-    const flashInt = setInterval(() => {
-      if (i === 8) {
-        // console.log("finished");
-        setFlashedItems([]);
-        const timeout = setTimeout(() => {
-          if (j === 9) {
-            clearInterval(flashInt);
-            setNope(true);
-            fillArr();
-            setEnabled(true);
-            console.log("cleared");
-            clearInterval(timeout);
-          }
-          j++;
-          console.log(j);
-        }, 1000);
-        // clearTimeout(timeout);
-        return;
-      }
-      //console.log(toComapre);
-      setFlashedItems([toComapre[i]]);
-      i++;
-    }, 1000);
+    if (!win) {
+      let i = 0;
+      // let j = 0;
+      // let z = 10;
+      // const flashInt =
+      setInterval(() => {
+        if (i === 8) {
+          // console.log("finished");
+          setFlashedItems([]);
+          // const timeout = setTimeout(() => {
+          //   if (j === 15) {
+          //     clearInterval(flashInt);
+          //     setNope(true);
+          //     setSwitchFill(!switchFill);
+          //     setEnabled(true);
+          //     checkWin(flashInt, timeout);
+          //     console.log("cleared");
+          //     clearInterval(timeout);
+          //   }
+          //   j++;
+          //   // console.log(j);
+          // }, 1000);
+          // clearTimeout(timeout);
+          return;
+        }
+        //console.log(toComapre);
+        setFlashedItems([toComapre[i]]);
+        i++;
+      }, 1000);
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [started]);
 
   function startGame() {
+    let j = 0;
+    setWin(false);
     if (enabled) setEnabled(false);
-    if (nope) setNope(false);
+    const timeout = setTimeout(() => {
+      if (j === 10) {
+        setNope(true);
+        setSwitchFill(!switchFill);
+        setEnabled(true);
+        // checkWin(flashInt, timeout);
+        console.log("cleared");
+        clearInterval(timeout);
+      }
+      j++;
+      // console.log(j);
+    }, 1000);
+    // if (nope) setNope(false);
     setSelectedBoxes([]);
     console.log("SYNC", toComapre);
     setStarted(!started);
@@ -153,7 +196,7 @@ function App() {
         >
           Start Game
         </button>
-        <p>{`time left 10 seconds`}</p>
+        {/* <p>{`time left ${counter} seconds`}</p> */}
       </div>
     </div>
   );
