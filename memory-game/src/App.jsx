@@ -112,30 +112,11 @@ function App() {
   useEffect(() => {
     if (!win) {
       let i = 0;
-      // let j = 0;
-      // let z = 10;
-      // const flashInt =
       setInterval(() => {
         if (i === 8) {
-          // console.log("finished");
           setFlashedItems([]);
-          // const timeout = setTimeout(() => {
-          //   if (j === 15) {
-          //     clearInterval(flashInt);
-          //     setNope(true);
-          //     setSwitchFill(!switchFill);
-          //     setEnabled(true);
-          //     checkWin(flashInt, timeout);
-          //     console.log("cleared");
-          //     clearInterval(timeout);
-          //   }
-          //   j++;
-          //   // console.log(j);
-          // }, 1000);
-          // clearTimeout(timeout);
           return;
         }
-        //console.log(toComapre);
         setFlashedItems([toComapre[i]]);
         i++;
       }, 1000);
