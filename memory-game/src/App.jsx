@@ -1,7 +1,6 @@
 /* eslint-disable no-unused-vars */
 import React from "react";
-import { useEffect } from "react";
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 
 import "./App.css";
 
@@ -39,7 +38,7 @@ function App() {
 	const [toFlashItem, setToFlashItem] = useState();
 	const [flashedItems, setFlashedItems] = useState([150]);
 	const [gameWon, setGameWon] = useState(false);
-	const [timeId, setTimeId] = useState(0);
+	const timer = useRef(null);
 
 	function arrayEquals(a, b) {
 		return (
@@ -83,25 +82,29 @@ function App() {
 
 	useEffect(() => {
 		if (flashedItems.length > 1) {
-			let gameTimer = setTimeout(() => {
-				console.log("when creating", gameTimer);
-				setTimeId(gameTimer);
-				alert("You Lost!");
-				setSelectedBoxes([
-					0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15,
-				]);
-				setFlashedItems([150]);
-			}, 10000);
-			if (
-				!checkIfArrayInside(flashedItems, selectedBoxes) &&
-				selectedBoxes.length < 13
-			) {
-				console.log("when clearing", gameTimer);
-				clearTimeout(timeId);
-				alert("Wrong case... You Lost!");
-			}
+			let i = 0;
+			timer.current = setInterval(() => {
+				i++;
+				console.log(i);
+				if (i == 10) {
+					alert("You Lost!");
+					setSelectedBoxes([
+						0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15,
+					]);
+					setFlashedItems([150]);
+				}
+			}, 1000);
+			// if (
+			// 	!checkIfArrayInside(flashedItems, selectedBoxes) &&
+			// 	selectedBoxes.length < 13
+			// ) {
+			// 	// console.log("when clearing", gameTimer);
+			// 	clearTimeout(timer.current);
+			// 	alert("Wrong case... You Lost!");
+			// }
 		}
-	}, [flashedItems, selectedBoxes, timeId]);
+		return () => clearInterval(timer.current);
+	}, [flashedItems]);
 
 	useEffect(() => {
 		console.log("I enter check effect");
@@ -110,14 +113,16 @@ function App() {
 			setGameWon(true);
 			setSelectedBoxes([]);
 			setFlashedItems([150]);
+		} else if (
+			!checkIfArrayInside(flashedItems, selectedBoxes) &&
+			selectedBoxes.length < 15
+		) {
+			console.log(timer.current);
+			clearInterval(timer.current);
+			alert("Wrong case... You Lost!");
+			setSelectedBoxes([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]);
+			setFlashedItems([150]);
 		}
-		// else if (
-		// 	!checkIfArrayInside(flashedItems, selectedBoxes) &&
-		// 	selectedBoxes.length < 13
-		// ) {
-		// 	alert("Wrong case... You Lost!");
-		// 	setWrongCase(true);
-		// }
 	}, [flashedItems, selectedBoxes]);
 
 	return (
