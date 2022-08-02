@@ -22,6 +22,15 @@ function generateTen() {
 	return result;
 }
 
+function checkIfArrayInside(arr1, arr2) {
+	for (let i = 0; i < arr2.length; i++) {
+		if (arr1[i] !== arr2[i]) {
+			return false;
+		}
+	}
+	return true;
+}
+
 function App() {
 	const [boxArr] = useState(
 		() => Array.from({ length: 16 }, (_, i) => i + 1) // 9 -12 -15 - 18
@@ -29,6 +38,8 @@ function App() {
 	const [selectedBoxes, setSelectedBoxes] = useState([]);
 	const [toFlashItem, setToFlashItem] = useState();
 	const [flashedItems, setFlashedItems] = useState([150]);
+	const [gameWon, setGameWon] = useState(false);
+	const [timeId, setTimeId] = useState(0);
 
 	function arrayEquals(a, b) {
 		return (
@@ -52,6 +63,7 @@ function App() {
 	}
 
 	function startGame() {
+		setSelectedBoxes([]);
 		let toFlashArr = generateTen();
 		let i = 0;
 		let tempArr = [];
@@ -62,6 +74,7 @@ function App() {
 			if (i == 12) {
 				tempArr.pop();
 				setFlashedItems(tempArr);
+				setGameWon(false);
 				clearInterval(interval);
 				setToFlashItem(null);
 			}
@@ -69,12 +82,42 @@ function App() {
 	}
 
 	useEffect(() => {
+		if (flashedItems.length > 1) {
+			let gameTimer = setTimeout(() => {
+				console.log("when creating", gameTimer);
+				setTimeId(gameTimer);
+				alert("You Lost!");
+				setSelectedBoxes([
+					0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15,
+				]);
+				setFlashedItems([150]);
+			}, 10000);
+			if (
+				!checkIfArrayInside(flashedItems, selectedBoxes) &&
+				selectedBoxes.length < 13
+			) {
+				console.log("when clearing", gameTimer);
+				clearTimeout(timeId);
+				alert("Wrong case... You Lost!");
+			}
+		}
+	}, [flashedItems, selectedBoxes, timeId]);
+
+	useEffect(() => {
 		console.log("I enter check effect");
 		if (arrayEquals(flashedItems, selectedBoxes)) {
 			alert("You Won!");
+			setGameWon(true);
 			setSelectedBoxes([]);
 			setFlashedItems([150]);
 		}
+		// else if (
+		// 	!checkIfArrayInside(flashedItems, selectedBoxes) &&
+		// 	selectedBoxes.length < 13
+		// ) {
+		// 	alert("Wrong case... You Lost!");
+		// 	setWrongCase(true);
+		// }
 	}, [flashedItems, selectedBoxes]);
 
 	return (
