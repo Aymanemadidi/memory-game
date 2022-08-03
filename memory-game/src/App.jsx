@@ -37,7 +37,9 @@ function App() {
 	const [selectedBoxes, setSelectedBoxes] = useState([]);
 	const [toFlashItem, setToFlashItem] = useState();
 	const [flashedItems, setFlashedItems] = useState([150]);
+	const [winItems, setWinItems] = useState([]);
 	const [gameWon, setGameWon] = useState(false);
+	const [level, setLevel] = useState(5);
 	const timer = useRef(null);
 
 	function arrayEquals(a, b) {
@@ -61,8 +63,13 @@ function App() {
 		}
 	}
 
+	function handleLevelChange(e) {
+		setLevel(Number(e.target.value));
+	}
+
 	function startGame() {
 		setSelectedBoxes([]);
+		setWinItems([]);
 		let toFlashArr = generateTen();
 		let i = 0;
 		let tempArr = [];
@@ -70,7 +77,7 @@ function App() {
 			setToFlashItem(toFlashArr[i]);
 			tempArr.push(toFlashArr[i]);
 			i++;
-			if (i == 12) {
+			if (i == level) {
 				tempArr.pop();
 				setFlashedItems(tempArr);
 				setGameWon(false);
@@ -86,7 +93,7 @@ function App() {
 			timer.current = setInterval(() => {
 				i++;
 				console.log(i);
-				if (i == 25) {
+				if (i == 15) {
 					alert("You Lost!");
 					setSelectedBoxes([
 						0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15,
@@ -110,6 +117,7 @@ function App() {
 		console.log("I enter check effect");
 		if (arrayEquals(flashedItems, selectedBoxes)) {
 			alert("You Won!");
+			setWinItems(selectedBoxes);
 			setGameWon(true);
 			setSelectedBoxes([]);
 			setFlashedItems([150]);
@@ -130,14 +138,30 @@ function App() {
 			<h1 className="text-indigo-600 text-2xl font-semibold mt-4">
 				Memory Game
 			</h1>
+			<div className="difficulty-select">
+				<select
+					name="difficulty"
+					id="difficulty"
+					className="mt-2"
+					onChange={handleLevelChange}
+				>
+					<option value="5">Level 1</option>
+					<option value="6">Level 2</option>
+					<option value="7">Level 3</option>
+					<option value="8">Level 4</option>
+					<option value="9">Level 5</option>
+				</select>
+			</div>
 			<div className={`grid gap-5 mt-10 mx-10 grid-cols-4`}>
 				{boxArr.map((box, i) => {
 					return (
 						<button
 							className={`px-5 py-12 bg-slate-300 rounded-md text-slate-900 
-              ${
-								selectedBoxes.includes(i) ? "bg-slate-700 text-slate-700" : ""
-							}${toFlashItem == i ? "bg-indigo-500 text-indigo-500" : ""}`}
+              ${selectedBoxes.includes(i) ? "bg-slate-700 text-slate-700" : ""}
+              ${toFlashItem == i ? "bg-indigo-500 text-indigo-500" : ""}
+              ${winItems.includes(i) ? "bg-green-500 text-green-500" : ""}
+              
+              `}
 							key={box + i}
 							onClick={() => handleSelectBtn(i)}
 							disabled={selectedBoxes.includes(i)}
