@@ -35,7 +35,7 @@ function App() {
 		() => Array.from({ length: 8 }, (_, i) => i + 1) // 9 -12 -15 - 18
 	);
 	const [selectedBoxes, setSelectedBoxes] = useState([]);
-	const [toFlashItem, setToFlashItem] = useState();
+	const [toFlashItem, setToFlashItem] = useState(null);
 	const [flashedItems, setFlashedItems] = useState([150]);
 	const [winItems, setWinItems] = useState([]);
 	const [gameWon, setGameWon] = useState(false);
@@ -95,9 +95,7 @@ function App() {
 				console.log(i);
 				if (i == 15) {
 					alert("You Lost!");
-					setSelectedBoxes([
-						0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15,
-					]);
+					setSelectedBoxes(Array.from(Array(40).keys()));
 					setFlashedItems([150]);
 				}
 			}, 1000);
@@ -134,7 +132,7 @@ function App() {
 			console.log(timer.current);
 			clearInterval(timer.current);
 			alert("Wrong case... You Lost!");
-			setSelectedBoxes([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]);
+			setSelectedBoxes(Array.from(Array(40).keys()));
 			setFlashedItems([150]);
 		}
 	}, [boxArr.length, flashedItems, level, selectedBoxes]);
@@ -192,7 +190,7 @@ function App() {
 				<button
 					className="bg-indigo-500 text-white p-3 rounded-md hover:bg-indigo-400 disabled:bg-indigo-300"
 					onClick={() => startGame()}
-					// disabled={!enabled}
+					disabled={!(toFlashItem === null)}
 				>
 					Start Game
 				</button>
