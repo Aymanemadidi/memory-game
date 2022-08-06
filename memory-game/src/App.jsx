@@ -8,13 +8,13 @@ function getRandomInt(max) {
 	return Math.floor(Math.random() * max);
 }
 
-function generateTen() {
+function generateTen(max) {
 	let result = [];
 	let temp;
 	for (let i = 0; i < 11; i++) {
-		temp = getRandomInt(15);
+		temp = getRandomInt(max);
 		while (result.includes(temp)) {
-			temp = getRandomInt(15);
+			temp = getRandomInt(max);
 		}
 		result.push(temp);
 	}
@@ -31,8 +31,8 @@ function checkIfArrayInside(arr1, arr2) {
 }
 
 function App() {
-	const [boxArr] = useState(
-		() => Array.from({ length: 16 }, (_, i) => i + 1) // 9 -12 -15 - 18
+	const [boxArr, setBoxArr] = useState(
+		() => Array.from({ length: 8 }, (_, i) => i + 1) // 9 -12 -15 - 18
 	);
 	const [selectedBoxes, setSelectedBoxes] = useState([]);
 	const [toFlashItem, setToFlashItem] = useState();
@@ -70,7 +70,7 @@ function App() {
 	function startGame() {
 		setSelectedBoxes([]);
 		setWinItems([]);
-		let toFlashArr = generateTen();
+		let toFlashArr = generateTen(7);
 		let i = 0;
 		let tempArr = [];
 		let interval = setInterval(() => {
@@ -117,10 +117,14 @@ function App() {
 		console.log("I enter check effect");
 		if (arrayEquals(flashedItems, selectedBoxes)) {
 			alert("You Won!");
-			setWinItems(selectedBoxes);
+			//setWinItems(selectedBoxes);
 			setGameWon(true);
 			setSelectedBoxes([]);
 			setFlashedItems([150]);
+			setBoxArr(() => Array.from({ length: 16 }, (_, i) => i + 1));
+			if (level < 9) {
+				setLevel(level + 1);
+			}
 		} else if (
 			!checkIfArrayInside(flashedItems, selectedBoxes) &&
 			selectedBoxes.length < 15
@@ -131,7 +135,7 @@ function App() {
 			setSelectedBoxes([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]);
 			setFlashedItems([150]);
 		}
-	}, [flashedItems, selectedBoxes]);
+	}, [flashedItems, level, selectedBoxes]);
 
 	return (
 		<div className="App text-center">
@@ -144,6 +148,7 @@ function App() {
 					id="difficulty"
 					className="mt-2"
 					onChange={handleLevelChange}
+					value={level}
 				>
 					<option value="5">Level 1</option>
 					<option value="6">Level 2</option>
