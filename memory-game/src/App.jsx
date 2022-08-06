@@ -8,13 +8,13 @@ function getRandomInt(max) {
 	return Math.floor(Math.random() * max);
 }
 
-function generateTen(max) {
+function generateTen(len) {
 	let result = [];
 	let temp;
-	for (let i = 0; i < 11; i++) {
-		temp = getRandomInt(max);
+	for (let i = 0; i < len - 2; i++) {
+		temp = getRandomInt(len);
 		while (result.includes(temp)) {
-			temp = getRandomInt(max);
+			temp = getRandomInt(len);
 		}
 		result.push(temp);
 	}
@@ -70,7 +70,7 @@ function App() {
 	function startGame() {
 		setSelectedBoxes([]);
 		setWinItems([]);
-		let toFlashArr = generateTen(7);
+		let toFlashArr = generateTen(boxArr.length);
 		let i = 0;
 		let tempArr = [];
 		let interval = setInterval(() => {
@@ -117,11 +117,13 @@ function App() {
 		console.log("I enter check effect");
 		if (arrayEquals(flashedItems, selectedBoxes)) {
 			alert("You Won!");
-			//setWinItems(selectedBoxes);
+			setWinItems(selectedBoxes);
 			setGameWon(true);
 			setSelectedBoxes([]);
 			setFlashedItems([150]);
-			setBoxArr(() => Array.from({ length: 16 }, (_, i) => i + 1));
+			setBoxArr(() =>
+				Array.from({ length: boxArr.length + 8 }, (_, i) => i + 1)
+			);
 			if (level < 9) {
 				setLevel(level + 1);
 			}
@@ -135,7 +137,7 @@ function App() {
 			setSelectedBoxes([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]);
 			setFlashedItems([150]);
 		}
-	}, [flashedItems, level, selectedBoxes]);
+	}, [boxArr.length, flashedItems, level, selectedBoxes]);
 
 	return (
 		<div className="App text-center">
@@ -157,11 +159,21 @@ function App() {
 					<option value="9">Level 5</option>
 				</select>
 			</div>
-			<div className={`grid gap-5 mt-10 mx-10 grid-cols-4`}>
+			<div
+				className={`grid gap-5 mt-10 mx-10 grid-cols-${
+					boxArr.length <= 16
+						? 4
+						: boxArr.length <= 24
+						? 6
+						: boxArr.length <= 42
+						? 8
+						: 12
+				}`}
+			>
 				{boxArr.map((box, i) => {
 					return (
 						<button
-							className={`px-5 py-12 bg-slate-300 rounded-md text-slate-900 
+							className={`px-3 py-10 bg-slate-300 rounded-md text-slate-900 
               ${selectedBoxes.includes(i) ? "bg-slate-700 text-slate-700" : ""}
               ${toFlashItem == i ? "bg-indigo-500 text-indigo-500" : ""}
               ${winItems.includes(i) ? "bg-green-500 text-green-500" : ""}
