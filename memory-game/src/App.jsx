@@ -1,34 +1,9 @@
 /* eslint-disable no-unused-vars */
 import React from "react";
 import { useState, useEffect, useRef } from "react";
+import { generateTen, checkIfArrayInside, arrayEquals } from "./utils";
 
 import "./App.css";
-
-function getRandomInt(max) {
-	return Math.floor(Math.random() * max);
-}
-
-function generateTen(len) {
-	let result = [];
-	let temp;
-	for (let i = 0; i < len - 2; i++) {
-		temp = getRandomInt(len);
-		while (result.includes(temp)) {
-			temp = getRandomInt(len);
-		}
-		result.push(temp);
-	}
-	return result;
-}
-
-function checkIfArrayInside(arr1, arr2) {
-	for (let i = 0; i < arr2.length; i++) {
-		if (arr1[i] !== arr2[i]) {
-			return false;
-		}
-	}
-	return true;
-}
 
 function App() {
 	const [boxArr, setBoxArr] = useState(
@@ -42,15 +17,6 @@ function App() {
 	const [level, setLevel] = useState(5);
 	const timer = useRef(null);
 
-	function arrayEquals(a, b) {
-		return (
-			Array.isArray(a) &&
-			Array.isArray(b) &&
-			a.length === b.length &&
-			a.every((val, index) => val === b[index])
-		);
-	}
-
 	function handleSelectBtn(i) {
 		if (selectedBoxes.includes(i)) {
 			const selectedCopy = [...selectedBoxes];
@@ -59,7 +25,6 @@ function App() {
 			setSelectedBoxes([...selectedCopy]);
 		} else {
 			setSelectedBoxes([...selectedBoxes, i]);
-			// console.log(selectedBoxes);
 		}
 	}
 
@@ -93,20 +58,12 @@ function App() {
 			timer.current = setInterval(() => {
 				i++;
 				console.log(i);
-				if (i == 15) {
+				if (i == 20) {
 					alert("You Lost!");
 					setSelectedBoxes(Array.from(Array(40).keys()));
 					setFlashedItems([150]);
 				}
 			}, 1000);
-			// if (
-			// 	!checkIfArrayInside(flashedItems, selectedBoxes) &&
-			// 	selectedBoxes.length < 13
-			// ) {
-			// 	// console.log("when clearing", gameTimer);
-			// 	clearTimeout(timer.current);
-			// 	alert("Wrong case... You Lost!");
-			// }
 		}
 		return () => clearInterval(timer.current);
 	}, [flashedItems]);
@@ -115,13 +72,14 @@ function App() {
 		console.log("I enter check effect");
 		if (arrayEquals(flashedItems, selectedBoxes)) {
 			alert("You Won!");
-			setWinItems(selectedBoxes);
 			setGameWon(true);
 			setSelectedBoxes([]);
 			setFlashedItems([150]);
-			setBoxArr(() =>
-				Array.from({ length: boxArr.length + 8 }, (_, i) => i + 1)
-			);
+			if (boxArr.length < 36) {
+				setBoxArr(() =>
+					Array.from({ length: boxArr.length + 8 }, (_, i) => i + 1)
+				);
+			}
 			if (level < 9) {
 				setLevel(level + 1);
 			}
