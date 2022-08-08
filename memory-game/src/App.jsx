@@ -1,5 +1,4 @@
 /* eslint-disable no-unused-vars */
-import React from "react";
 import { useState, useEffect, useRef } from "react";
 import { generateTen, checkIfArrayInside, arrayEquals } from "./utils";
 
@@ -15,6 +14,7 @@ function App() {
 	const [winItems, setWinItems] = useState([]);
 	const [gameWon, setGameWon] = useState(false);
 	const [level, setLevel] = useState(5);
+	const [counter, setCounter] = useState(15);
 	const timer = useRef(null);
 
 	function handleSelectBtn(i) {
@@ -50,29 +50,33 @@ function App() {
 				setToFlashItem(null);
 			}
 		}, 500);
+		setCounter(15);
 	}
 
 	useEffect(() => {
-		if (flashedItems.length > 1) {
+		if (flashedItems.length > 1 && toFlashItem === null) {
 			let i = 0;
 			timer.current = setInterval(() => {
 				i++;
 				console.log(i);
-				if (i == 20) {
+				setCounter(counter - 1);
+				if (counter == 0) {
 					alert("You Lost!");
+					setCounter(15);
 					setSelectedBoxes(Array.from(Array(40).keys()));
 					setFlashedItems([150]);
 				}
 			}, 1000);
 		}
 		return () => clearInterval(timer.current);
-	}, [flashedItems]);
+	}, [counter, flashedItems, toFlashItem]);
 
 	useEffect(() => {
 		console.log("I enter check effect");
 		if (arrayEquals(flashedItems, selectedBoxes)) {
 			alert("You Won!");
 			setGameWon(true);
+			setCounter(15);
 			setSelectedBoxes([]);
 			setFlashedItems([150]);
 			if (boxArr.length < 36) {
@@ -107,6 +111,7 @@ function App() {
 					className="mt-2"
 					onChange={handleLevelChange}
 					value={level}
+					disabled
 				>
 					<option value="5">Level 1</option>
 					<option value="6">Level 2</option>
@@ -129,7 +134,7 @@ function App() {
 				{boxArr.map((box, i) => {
 					return (
 						<button
-							className={`px-3 py-10 bg-slate-300 rounded-md text-slate-900 
+							className={`px-3 py-7 bg-slate-300 rounded-md text-slate-900 
               ${selectedBoxes.includes(i) ? "bg-slate-700 text-slate-700" : ""}
               ${toFlashItem == i ? "bg-indigo-500 text-indigo-500" : ""}
               ${winItems.includes(i) ? "bg-green-500 text-green-500" : ""}
@@ -152,7 +157,9 @@ function App() {
 				>
 					Start Game
 				</button>
-				{/* <p>{`time left ${counter} seconds`}</p> */}
+				<p className="mt-3 font-semibold">
+					time left: <span className="text-red-600">{counter} seconds</span>
+				</p>
 			</div>
 		</div>
 	);
