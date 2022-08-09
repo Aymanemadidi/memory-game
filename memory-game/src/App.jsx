@@ -74,7 +74,11 @@ function App() {
 	useEffect(() => {
 		console.log("I enter check effect");
 		if (arrayEquals(flashedItems, selectedBoxes)) {
-			alert("You Won!");
+			if (level === 9) {
+				alert("You Finished the game What a LEGEND!!!");
+			} else {
+				alert("You Won!");
+			}
 			setGameWon(true);
 			setCounter(15);
 			setSelectedBoxes([]);
@@ -108,16 +112,26 @@ function App() {
 				<select
 					name="difficulty"
 					id="difficulty"
-					className="mt-2"
+					className="mt-2 font-semibold"
 					onChange={handleLevelChange}
 					value={level}
 					disabled
 				>
-					<option value="5">Level 1</option>
-					<option value="6">Level 2</option>
-					<option value="7">Level 3</option>
-					<option value="8">Level 4</option>
-					<option value="9">Level 5</option>
+					<option className="font-semibold" value="5">
+						Level 1
+					</option>
+					<option className="font-semibold" value="6">
+						Level 2
+					</option>
+					<option className="font-semibold" value="7">
+						Level 3
+					</option>
+					<option className="font-semibold" value="8">
+						Level 4
+					</option>
+					<option className="font-semibold" value="9">
+						The Final
+					</option>
 				</select>
 			</div>
 			<div
