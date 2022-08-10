@@ -59,7 +59,6 @@ function App() {
 			let i = 0;
 			timer.current = setInterval(() => {
 				i++;
-				console.log(i);
 				setCounter(counter - 1);
 				if (counter == 0) {
 					alert("You Lost!");
@@ -73,7 +72,6 @@ function App() {
 	}, [counter, flashedItems, toFlashItem]);
 
 	useEffect(() => {
-		console.log("I enter check effect");
 		if (arrayEquals(flashedItems, selectedBoxes)) {
 			if (level === 9) {
 				alert("You Finished the game What a LEGEND!!!");
@@ -105,7 +103,6 @@ function App() {
 			!checkIfArrayInside(flashedItems, selectedBoxes) &&
 			selectedBoxes.length < 15
 		) {
-			console.log(timer.current);
 			clearInterval(timer.current);
 			alert("Wrong case... You Lost!");
 			setSelectedBoxes(Array.from(Array(40).keys()));
