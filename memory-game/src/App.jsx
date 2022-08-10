@@ -2,8 +2,6 @@
 import { useState, useEffect, useRef } from "react";
 import { generateTen, checkIfArrayInside, arrayEquals } from "./utils";
 
-import "./App.css";
-
 function App() {
 	const [boxArr, setBoxArr] = useState(
 		() => Array.from({ length: 8 }, (_, i) => i + 1) // 9 -12 -15 - 18
