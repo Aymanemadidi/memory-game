@@ -6,7 +6,7 @@ import "./App.css";
 
 function App() {
 	const [boxArr, setBoxArr] = useState(
-		() => Array.from({ length: 8 }, (_, i) => i + 1) // 9 -12 -15 - 18
+		Array.from({ length: 8 }, (_, i) => i + 1) // 9 -12 -15 - 18
 	);
 	const [selectedBoxes, setSelectedBoxes] = useState([]);
 	const [toFlashItem, setToFlashItem] = useState(null);
@@ -14,6 +14,7 @@ function App() {
 	const [winItems, setWinItems] = useState([]);
 	const [gameWon, setGameWon] = useState(false);
 	const [level, setLevel] = useState(5);
+	const [gridCols, setGridCols] = useState("grid-cols-4");
 	const [counter, setCounter] = useState(15);
 	const timer = useRef(null);
 
@@ -83,6 +84,15 @@ function App() {
 			setCounter(15);
 			setSelectedBoxes([]);
 			setFlashedItems([150]);
+			if (level === 6) {
+				setGridCols("grid-cols-6");
+			} else if (level === 7) {
+				setGridCols("grid-cols-8");
+			} else if (level === 8) {
+				setGridCols("grid-cols-10");
+			} else if (level === 9) {
+				setGridCols("grid-cols-12");
+			}
 			if (boxArr.length < 36) {
 				setBoxArr(() =>
 					Array.from({ length: boxArr.length + 8 }, (_, i) => i + 1)
@@ -134,17 +144,7 @@ function App() {
 					</option>
 				</select>
 			</div>
-			<div
-				className={`grid gap-5 mt-10 mx-10 grid-cols-${
-					boxArr.length <= 16
-						? 4
-						: boxArr.length <= 24
-						? 6
-						: boxArr.length <= 42
-						? 8
-						: 12
-				}`}
-			>
+			<div className={`grid gap-5 mt-10 mx-10 ${gridCols}`}>
 				{boxArr.map((box, i) => {
 					return (
 						<button
