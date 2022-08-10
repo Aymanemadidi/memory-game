@@ -2,6 +2,8 @@
 import { useState, useEffect, useRef } from "react";
 import { generateTen, checkIfArrayInside, arrayEquals } from "./utils";
 
+import "./App.css";
+
 function App() {
 	const [boxArr, setBoxArr] = useState(
 		() => Array.from({ length: 8 }, (_, i) => i + 1) // 9 -12 -15 - 18
@@ -99,7 +101,7 @@ function App() {
 			setSelectedBoxes(Array.from(Array(40).keys()));
 			setFlashedItems([150]);
 		}
-	}, [boxArr.length, flashedItems, level, selectedBoxes]);
+	}, [boxArr.length, counter, flashedItems, level, selectedBoxes]);
 
 	return (
 		<div className="App text-center">
